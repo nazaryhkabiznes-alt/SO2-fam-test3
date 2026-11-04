@@ -265,7 +265,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         .loader-ring {
@@ -290,6 +290,16 @@
             color: var(--accent-gold);
             letter-spacing: 1px;
             text-shadow: 0 0 10px var(--accent-gold-glow);
+        }
+
+        #loader-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 280px;
+            letter-spacing: 0.5px;
+            min-height: 16px;
+            transition: opacity 0.3s ease;
         }
 
         .toggle-switch {
@@ -685,6 +695,7 @@
             align-items: flex-end;
             border: 1px solid var(--border-color);
             box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            position: relative;
         }
 
         .profile-avatar-circle {
@@ -780,7 +791,6 @@
             100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
 
-        /* УВЕЛИЧЕННОЕ И УДОБНОЕ ОКНО ЧАТА КЛАНА */
         .tg-chat-box {
             background: rgba(20, 22, 27, 0.95);
             border: 1px solid var(--border-color);
@@ -795,6 +805,7 @@
             gap: 12px;
             scroll-behavior: smooth;
             box-shadow: inset 0 4px 15px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .tg-msg {
@@ -832,6 +843,27 @@
             cursor: pointer;
         }
 
+        .chat-scroll-down-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(243, 156, 18, 0.9);
+            color: #121316;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 20;
+            display: none;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+        .chat-scroll-down-btn.show { display: flex; }
+
         .action-buttons-group {
             display: grid;
             grid-template-columns: 1fr;
@@ -851,16 +883,16 @@
             border: 1px solid var(--accent-gold);
             color: var(--text-main);
             border-radius: 8px;
-            padding: 9px 14px;
+            padding: 7px 12px;
             font-weight: 600;
-            font-size: 10px;
+            font-size: 9.5px;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 100%;
-            margin: 0;
+            gap: 6px;
+            width: auto;
+            margin: 0 auto;
             transition: all 0.2s;
             box-shadow: 0 3px 10px rgba(0,0,0,0.3);
             outline: none;
@@ -873,8 +905,8 @@
         }
 
         .copy-icon-svg {
-            width: 15px;
-            height: 15px;
+            width: 13px;
+            height: 13px;
             fill: var(--accent-gold);
             transition: fill 0.2s;
         }
@@ -950,11 +982,13 @@
 
     <div id="toast-container"></div>
 
+    <!-- Загрузчик с динамическими подсказками -->
     <div id="global-loader" class="loading-overlay">
         <div class="loader-ring-container">
             <div class="loader-ring"></div>
             <div id="loader-percent">0%</div>
         </div>
+        <div id="loader-hint">Пожалуйста, подождите немного...</div>
     </div>
 
 <div id="app">
@@ -1041,7 +1075,7 @@
                         <h2 id="profile-title-mode">Личный профиль</h2>
                         <div class="top-bar-buttons">
                             <button class="gear-btn" onclick="openSettingsDrawer()" title="Настройки и шторка">
-                                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c-.5.38-1.03.7-1.62.94l-.36 2.54c-.05.24-.24.41-.48.41h-3.84c-.24 0-.43-.17-.47-.41l-.36-2.54c-.59-.24-1.13-.57-1.62-.94l-2.39-.96c-.22-.08-.47 0-.59-.22L2.74 15.13c-.12-.21-.08-.47.12-.61l2.03-1.58c-.05-.3-.09-.63-.09-.94s.02-.64.07-.94l-2.03-1.58c-.18-.14-.23-.41-.12-.61l1.92-3.32c.12-.22.37-.29.59-.22l2.39.96c.5-.38 1.03-.7 1.62-.94l.36-2.54c.05-.24.24-.41.48-.41h3.84c.24 0 .43.17.47.41l.36 2.54c.59.24 1.13.57 1.62.94l2.39-.96c.22-.08.47 0 .59.22l1.92 3.32c.12.22.07.47-.12.61l-2.01 1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c-.5.38-1.03.7-1.62.94l-.36 2.54c-.05.24-.24.41-.48.41h-3.84c-.24 0-.43-.17-.47-.41l-.36-2.54c-.59-.24-1.13-.57-1.62-.94l-2.39-.96c-.22-.08-.47 0-.59-.22L2.74 15.13c-.12-.21-.08-.47.12-.61l2.03-1.58c-.05-.3-.09-.63-.09-.94s.02-.64.07-.94l-2.03-1.58c-.18-.14-.23-.41-.12-.61l1.92-3.32c.12-.22.37-.29.59-.22l2.39-.96c-.5.38-1.03.7-1.62.94l-.36 2.54c-.05.24-.24.41-.48.41h-3.84c-.24 0-.43.17-.47-.41l-.36-2.54c-.59-.24-1.13-.57-1.62-.94l-2.39-.96c-.22-.08-.47 0-.59-.22L2.74 15.13c-.12-.21-.08-.47.12-.61l2.03-1.58c-.05-.3-.09-.63-.09-.94s.02-.64.07-.94l-2.03-1.58c-.18-.14-.23-.41-.12-.61l1.92-3.32c.12-.22.07-.47-.12.61l-2.01 1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
                                 Настройки
                             </button>
                         </div>
@@ -1161,12 +1195,48 @@
                 <p id="t-set-vis-desc" style="font-size: 10.5px; color: var(--text-muted); margin-bottom: 0; text-align: left; line-height: 1.4;">Интерфейс поддерживает кибер-тактическую темную тему с эффектами стекломорфизма и частицами снега.</p>
             </div>
 
-            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+            <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn btn-danger" onclick="initiateAccountDeletionPrompt()" style="font-size: 10px;">
+                    🗑️ Удалить аккаунт навсегда
+                </button>
                 <button class="btn btn-logout-cyber" id="t-set-logout" onclick="logoutAccount()">
                     <svg style="width:14px; height:14px; fill:currentColor;" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                     Выйти из аккаунта
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно лимита аккаунтов с машущим пальцем/жестом -->
+    <div id="max-accounts-modal" class="modal-overlay hidden">
+        <div class="modal-box" style="text-align: center;">
+            <div style="font-size: 42px; margin-bottom: 4px;">🙅‍♂️</div>
+            <h3 style="color: var(--danger); margin-bottom: 6px;">Лимит аккаунтов</h3>
+            <p style="font-size: 11.5px; color: var(--text-main); margin-bottom: 16px; line-height: 1.45;">Ограничено. Вы создали максимальное количество аккаунтов. Пожалуйста, войдите в другой аккаунт и удалите его.</p>
+            <button class="btn btn-gold" onclick="closeMaxAccountsModal()">Понятно</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления аккаунта и ввода кода -->
+    <div id="account-deletion-modal" class="modal-overlay hidden">
+        <div class="modal-box" style="border-color: var(--danger);">
+            <h3 style="color: var(--danger);">Удаление аккаунта</h3>
+            <p id="deletion-modal-desc" style="font-size: 11px; color: var(--text-main); margin-bottom: 12px; line-height: 1.4;">Процесс удаления аккаунта занимает 3 дня. На ваш аккаунт отправлен 4-значный код подтверждения. Введите его ниже, чтобы подтвердить удаление или отменить.</p>
+            <input type="text" id="deletion-code-input" placeholder="Введите 4-значный код..." maxlength="4" style="text-align: center; letter-spacing: 4px; font-size: 16px;">
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn-danger" onclick="confirmAccountDeletionCode()">Подтвердить удаление</button>
+                <button class="btn" onclick="closeAccountDeletionModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Меню настроек клана для создателя -->
+    <div id="clan-settings-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 style="color: var(--accent-gold); margin-bottom: 12px;">Управление кланом</h3>
+            <button class="btn btn-gold" onclick="openEditClanFromMenu()">[✎] Редактировать клан</button>
+            <button class="btn btn-danger" onclick="openDeleteClanFromMenu()">[✕] Удалить клан</button>
+            <button class="btn" style="margin-top: 10px;" onclick="closeClanSettingsModal()">Закрыть</button>
         </div>
     </div>
 
@@ -1298,6 +1368,7 @@
     let currentAuthMode = 'login';
     let currentActiveView = 'feed';
     let clanToDeleteId = null;
+    let activeClanForMenu = null;
 
     function openSettingsDrawer() {
         document.getElementById('settings-drawer').classList.add('open');
@@ -1307,6 +1378,10 @@
     function closeSettingsDrawer() {
         document.getElementById('settings-drawer').classList.remove('open');
         document.getElementById('settings-drawer-backdrop').classList.remove('open');
+    }
+
+    function closeMaxAccountsModal() {
+        document.getElementById('max-accounts-modal').classList.add('hidden');
     }
 
     let feedClickCount = 0;
@@ -1457,14 +1532,36 @@
     function showRealLoader(asyncTask, minDuration = 2200) {
         const loader = document.getElementById('global-loader');
         const percentEl = document.getElementById('loader-percent');
+        const hintEl = document.getElementById('loader-hint');
         loader.classList.remove('hidden');
         
+        const hints = currentLang === 'ru' ? [
+            'Пожалуйста, подождите немного...',
+            'Это займет пару секунд...',
+            'Синхронизация с базой данных...',
+            'Загрузка тактических данных...',
+            'Почти готово...'
+        ] : [
+            'Please wait a moment...',
+            'This will take a few seconds...',
+            'Synchronizing with database...',
+            'Loading tactical data...',
+            'Almost ready...'
+        ];
+
+        let hintIdx = 0;
+        hintEl.innerText = hints[0];
+        const hintInterval = setInterval(() => {
+            hintIdx = (hintIdx + 1) % hints.length;
+            hintEl.innerText = hints[hintIdx];
+        }, 750);
+
         let currentPercent = 0;
         const startTime = performance.now();
         let taskCompleted = false;
         let taskResult = null;
 
-        const taskPromise = asyncTask().then(res => {
+        asyncTask().then(res => {
             taskCompleted = true;
             taskResult = res;
         }).catch(err => {
@@ -1487,6 +1584,7 @@
                 percentEl.innerText = currentPercent + '%';
 
                 if (currentPercent >= 100 && taskCompleted) {
+                    clearInterval(hintInterval);
                     setTimeout(() => {
                         loader.classList.add('hidden');
                         resolve(taskResult);
@@ -1984,7 +2082,8 @@
         avatar: '',
         clanId: null,
         bio: '',
-        password: ''
+        password: '',
+        deletionCode: null
     };
 
     let regularUserSession = null;
@@ -2119,7 +2218,7 @@
         let hasUnread = false;
         const myRequests = (appData.joinRequests || []).filter(r => {
             const clan = appData.clans.find(c => c.id === r.clan_id);
-            return clan && clan.owner_id === currentUser.id && r.unread;
+            return (r.owner_id === currentUser.id || (clan && clan.owner_id === currentUser.id)) && r.unread;
         });
         if (myRequests.length > 0) hasUnread = true;
 
@@ -2143,18 +2242,20 @@
     }
 
     function saveCurrentAccountToSavedList(acc) {
-        if (!acc || !acc.id) return;
+        if (!acc || !acc.id) return false;
         let list = getSavedAccounts();
         const existingIdx = list.findIndex(x => x.id === acc.id);
         if (existingIdx !== -1) {
             list[existingIdx] = acc;
         } else {
             if (list.length >= 3) {
-                list.pop();
+                document.getElementById('max-accounts-modal').classList.remove('hidden');
+                return false;
             }
             list.unshift(acc);
         }
         localStorage.setItem('so2fam_saved_accounts', JSON.stringify(list));
+        return true;
     }
 
     function renderSavedAccountsOnAuth() {
@@ -2238,7 +2339,8 @@
                         avatar: parsed.avatar,
                         bio: parsed.bio,
                         password: parsed.password,
-                        clanId: parsed.clanId || parsed.clan_id
+                        clanId: parsed.clanId || parsed.clan_id,
+                        deletionCode: parsed.deletionCode || null
                     };
                     
                     saveCurrentAccountToSavedList(currentUser);
@@ -2317,10 +2419,13 @@
                     avatar: existingProfile.avatar || DEFAULT_AVATAR_URL,
                     bio: existingProfile.bio || (currentLang === 'ru' ? 'Привет! Я играю в Standoff 2 и ищу сильный клан.' : 'Hi! I play Standoff 2 and look for a strong clan.'),
                     clanId: existingProfile.clan_id || null,
-                    clan_id: existingProfile.clan_id || null
+                    clan_id: existingProfile.clan_id || null,
+                    deletionCode: existingProfile.deletion_code || null
                 };
 
-                saveCurrentAccountToSavedList(currentUser);
+                const savedSuccess = saveCurrentAccountToSavedList(currentUser);
+                if (!savedSuccess) return;
+
                 localStorage.setItem('so2fam_current_user', JSON.stringify(currentUser));
                 sessionStorage.setItem('so2fam_current_user', JSON.stringify(currentUser));
 
@@ -2388,7 +2493,9 @@
                 } catch(e) {}
                 currentUser = newProf;
 
-                saveCurrentAccountToSavedList(currentUser);
+                const savedSuccess = saveCurrentAccountToSavedList(currentUser);
+                if (!savedSuccess) return;
+
                 localStorage.setItem('so2fam_current_user', JSON.stringify(currentUser));
                 sessionStorage.setItem('so2fam_current_user', JSON.stringify(currentUser));
 
@@ -2445,6 +2552,70 @@
                 callback();
             });
         }
+    }
+
+    async function initiateAccountDeletionPrompt() {
+        closeSettingsDrawer();
+        let code = currentUser.deletionCode;
+        if (!code) {
+            code = Math.floor(1000 + Math.random() * 9000).toString();
+            currentUser.deletionCode = code;
+            saveCurrentAccountToSavedList(currentUser);
+            localStorage.setItem('so2fam_current_user', JSON.stringify(currentUser));
+
+            try {
+                await sb.from('notifications').insert([{
+                    id: 'del_' + Date.now(),
+                    user_id: currentUser.id,
+                    text: currentLang === 'ru' ? `🔐 Запрос на удаление аккаунта. Код подтверждения: ${code}. Процесс удаления занимает 3 дня.` : `🔐 Account deletion request. Confirmation code: ${code}. Deletion takes 3 days.`,
+                    unread: true
+                }]);
+            } catch(e) {}
+        }
+        document.getElementById('account-deletion-modal').classList.remove('hidden');
+    }
+
+    function closeAccountDeletionModal() {
+        document.getElementById('account-deletion-modal').classList.add('hidden');
+    }
+
+    async function confirmAccountDeletionCode() {
+        const inputCode = document.getElementById('deletion-code-input').value.trim();
+        if (!inputCode) {
+            showSiteAlert(currentLang === 'ru' ? 'Введите 4-значный код.' : 'Enter 4-digit code.');
+            return;
+        }
+
+        if (inputCode !== currentUser.deletionCode) {
+            showSiteAlert(currentLang === 'ru' ? 'Неверный код подтверждения!' : 'Invalid confirmation code!');
+            return;
+        }
+
+        closeAccountDeletionModal();
+        handleCreatorExitOrDelete(async () => {
+            showRealLoader(async () => {
+                try {
+                    await sb.from('profiles').delete().eq('id', currentUser.id);
+                } catch(e) {}
+
+                let list = getSavedAccounts().filter(x => x.id !== currentUser.id);
+                localStorage.setItem('so2fam_saved_accounts', JSON.stringify(list));
+                localStorage.removeItem('so2fam_current_user');
+                sessionStorage.removeItem('so2fam_current_user');
+
+                currentUser = { id: '', name: '', avatar: '', clanId: null, bio: '', password: '', deletionCode: null };
+                stopChatPolling();
+                if (globalSyncInterval) clearInterval(globalSyncInterval);
+                if (heartbeatInterval) clearInterval(heartbeatInterval);
+
+                document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+                document.getElementById('screen-auth').classList.remove('hidden');
+                setAuthMode('login');
+                renderSavedAccountsOnAuth();
+            }, 1500).then(() => {
+                showToast('Удаление', currentLang === 'ru' ? 'Аккаунт полностью удален навсегда.' : 'Account deleted permanently.');
+            });
+        });
     }
 
     function logoutAccount() {
@@ -2757,16 +2928,27 @@
         `).join('');
     }
 
-    function copyInviteLink(clanId) {
+    function copyInviteLinkCompact(btn, clanId) {
         const inviteUrl = `${window.location.origin}${window.location.pathname}?clan=${clanId}`;
+        const originalHTML = btn.innerHTML;
+        
+        const finishCopy = () => {
+            btn.innerHTML = `<svg class="copy-icon-svg" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> ${currentLang === 'ru' ? 'Ссылка скопирована!' : 'Copied!'}`;
+            btn.style.borderColor = 'var(--success)';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.borderColor = 'var(--accent-gold)';
+            }, 1800);
+        };
+
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(inviteUrl).then(() => {
-                showToast(currentLang === 'ru' ? 'Ссылка' : 'Link', currentLang === 'ru' ? 'Прямая ссылка скопирована в буфер обмена!' : 'Direct link copied to clipboard!');
-            }).catch(() => {
+            navigator.clipboard.writeText(inviteUrl).then(finishCopy).catch(() => {
                 fallbackCopyText(inviteUrl);
+                finishCopy();
             });
         } else {
             fallbackCopyText(inviteUrl);
+            finishCopy();
         }
     }
 
@@ -2779,10 +2961,7 @@
         textArea.select();
         try {
             document.execCommand('copy');
-            showToast(currentLang === 'ru' ? 'Ссылка' : 'Link', currentLang === 'ru' ? 'Прямая ссылка скопирована в буфер обмена!' : 'Direct link copied to clipboard!');
-        } catch (err) {
-            prompt(currentLang === 'ru' ? 'Скопируйте ссылку:' : 'Copy link:', text);
-        }
+        } catch (err) {}
         document.body.removeChild(textArea);
     }
 
@@ -2854,9 +3033,33 @@
         }).join('') : `<p style="color:var(--text-muted); font-size:11px; text-align:center; margin-top:50px;">${d.noChat}</p>`;
 
         const wasAtBottom = (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) < 60;
+        
+        let scrollBtn = document.getElementById('chat-scroll-down-btn');
+        if (!scrollBtn) {
+            scrollBtn = document.createElement('button');
+            scrollBtn.id = 'chat-scroll-down-btn';
+            scrollBtn.className = 'chat-scroll-down-btn';
+            scrollBtn.innerHTML = '↓ Вниз';
+            scrollBtn.onclick = () => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+                scrollBtn.classList.remove('show');
+            };
+            chatBox.parentElement.appendChild(scrollBtn);
+        }
+
+        chatBox.onscroll = function() {
+            const isNearBottom = (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) < 70;
+            if (isNearBottom) {
+                scrollBtn.classList.remove('show');
+            } else {
+                scrollBtn.classList.add('show');
+            }
+        };
+
         chatBox.innerHTML = chatHtml;
         if (forceScroll || wasAtBottom || chatList.length === 1) {
             chatBox.scrollTop = chatBox.scrollHeight;
+            scrollBtn.classList.remove('show');
         }
     }
 
@@ -2889,6 +3092,28 @@
         }
     }
 
+    function openClanSettingsMenu(clanId) {
+        activeClanForMenu = clanId;
+        document.getElementById('clan-settings-modal').classList.remove('hidden');
+    }
+
+    function closeClanSettingsModal() {
+        document.getElementById('clan-settings-modal').classList.add('hidden');
+        activeClanForMenu = null;
+    }
+
+    function openEditClanFromMenu() {
+        const clanId = activeClanForMenu;
+        closeClanSettingsModal();
+        if (clanId) openEditClanModal(clanId);
+    }
+
+    function openDeleteClanFromMenu() {
+        const clanId = activeClanForMenu;
+        closeClanSettingsModal();
+        if (clanId) openDeleteClanModal(clanId);
+    }
+
     function updateClanDetailDOM(clan) {
         if (currentActiveView !== 'clan-detail' || activeChatClanId !== clan.id) return;
         const d = dict[currentLang];
@@ -2917,7 +3142,7 @@
                 <h3 style="font-size: 11.5px; text-align: left; margin-top: 14px; color: var(--accent-gold); letter-spacing: 0.5px;">[${currentLang === 'ru' ? 'ОБЩИЙ ЧАТ КЛАНА' : 'CLAN CHAT'}]</h3>
                 <div class="tg-chat-box" id="clan-chat-messages"></div>
                 <div style="display: flex; gap: 8px; margin-bottom: 20px;">
-                    <input type="text" id="clan-chat-input" placeholder="${d.chatPlaceholder}" style="margin:0; padding: 11px 14px; font-size: 12px;" onkeypress="handleChatKeyPress(event, '${clan.id}')">
+                    <input type="text" id="clan-chat-input" placeholder="${d.chatPlaceholder}" style="margin:0; padding: 12px 14px; font-size: 12px; flex: 1;" onkeypress="handleChatKeyPress(event, '${clan.id}')">
                     <button class="btn btn-gold" id="clan-send-btn" style="width: auto; margin:0; padding: 0 20px; font-size: 11px;" onclick="sendClanMessage('${clan.id}')">${d.chatSend}</button>
                 </div>
             `;
@@ -2929,17 +3154,10 @@
             `;
         }
 
-        let ownerButtons = '';
-        if (isOwner) {
-            ownerButtons = `
-                <button class="btn btn-gold" onclick="openEditClanModal('${clan.id}')">[✎] ${currentLang === 'ru' ? 'Редактировать клан' : 'Edit Clan'}</button>
-                <button class="btn btn-danger" onclick="openDeleteClanModal('${clan.id}')">[✕] ${currentLang === 'ru' ? 'Удалить клан' : 'Delete Clan'}</button>
-            `;
-        }
-
         let actionButton = '';
         if (isOwner) {
-            actionButton = ownerButtons;
+            // Для создателя кнопки действий внизу не нужны, управление через шестерню справа
+            actionButton = '';
         } else if (isMember) {
             actionButton = `<button class="btn btn-danger" onclick="leaveClan()">${d.btnLeave}</button>`;
         } else {
@@ -2954,6 +3172,12 @@
         detailContainer.innerHTML = `
             <div class="clan-detail-page">
                 <div class="clan-banner-header">
+                    ${isOwner ? `
+                        <button class="gear-btn" onclick="openClanSettingsMenu('${clan.id}')" style="position: absolute; top: 12px; right: 12px; padding: 6px 10px; z-index: 10;" title="Настройки клана">
+                            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c-.5.38-1.03.7-1.62.94l-.36 2.54c-.05.24-.24.41-.48.41h-3.84c-.24 0-.43.17-.47.41l-.36-2.54c-.59-.24-1.13-.57-1.62-.94l-2.39-.96c-.22-.08-.47 0-.59-.22L2.74 15.13c-.12-.21-.08-.47.12-.61l2.03-1.58c-.05-.3-.09-.63-.09-.94s.02-.64.07-.94l-2.03-1.58c-.18-.14-.23-.41-.12-.61l1.92-3.32c.12-.22.37-.29.59-.22l2.39-.96c-.5.38-1.03.7-1.62.94l.36-2.54c.05-.24.24-.41.48-.41h3.84c.24 0 .43.17.47.41l.36 2.54c.59.24 1.13.57 1.62.94l2.39.96c.22.08.47 0 .59.22l1.92 3.32c.12.22.07.47-.12.61l-2.01 1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                            Настройки
+                        </button>
+                    ` : ''}
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img src="${clan.photo}" style="width: 52px; height: 52px; border-radius: 8px; object-fit: cover; border: 2px solid var(--accent-gold); background: var(--bg-dark);" alt="Clan Avatar">
@@ -2980,15 +3204,13 @@
 
                 ${chatSection}
                 
-                <div class="action-buttons-group">
-                    ${actionButton}
-                </div>
+                ${actionButton ? `<div class="action-buttons-group">${actionButton}</div>` : ''}
 
                 <div style="margin-top: 10px; background: rgba(20,21,24,0.7); border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-                    <p style="font-size: 9.5px; color: var(--accent-gold); margin-bottom: 4px; font-weight: 600;">[${currentLang === 'ru' ? 'ССЫЛКА ДЛЯ ПРИГЛАШЕНИЯ' : 'INVITE LINK'}]</p>
-                    <button class="copy-invite-css-btn" onclick="copyInviteLink('${clan.id}')">
+                    <p style="font-size: 9.5px; color: var(--accent-gold); margin-bottom: 6px; font-weight: 600;">[${currentLang === 'ru' ? 'ССЫЛКА ДЛЯ ПРИГЛАШЕНИЯ' : 'INVITE LINK'}]</p>
+                    <button class="copy-invite-css-btn" onclick="copyInviteLinkCompact(this, '${clan.id}')">
                         <svg class="copy-icon-svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        ${currentLang === 'ru' ? 'Копировать прямую ссылку' : 'Copy Direct Link'}
+                        ${currentLang === 'ru' ? 'Копировать ссылку' : 'Copy Link'}
                     </button>
                 </div>
             </div>
@@ -3382,7 +3604,7 @@
         let requestsHtml = '';
         const myRequestsRaw = (appData.joinRequests || []).filter(r => {
             const clan = appData.clans.find(c => c.id === r.clan_id);
-            return clan && clan.owner_id === currentUser.id;
+            return (r.owner_id === currentUser.id) || (clan && clan.owner_id === currentUser.id);
         });
 
         const myRequests = Array.from(new Map(myRequestsRaw.map(r => [r.id, r])).values());
